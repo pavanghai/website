@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pavneet Ghai — Python Developer</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0e1117;
+    --paper: #f5f2eb;
+    --accent: #0f2d52;
+    --bright: #0f2d52;
+    --gold: #e8a020;
+    --muted: #374151;
+    --line: #c8c2b4;
+    --highlight: #deeeff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.4;
+  }
+
+  /* ── SIDE RULE ── */
+  .side-rule {
+    position: fixed;
+    left: 32px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--line);
+    z-index: 10;
+  }
+  .side-rule::after {
+    content: 'PAVNEET GHAI';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%) rotate(-90deg);
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 48px 0 80px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 60px 0 50px;
+    border-bottom: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .hero-photo {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--accent);
+    flex-shrink: 0;
+    background: #f0ede6;
+  }
+
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
+
+  .hero-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 3.5vw, 40px);
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-titles {
+    margin-top: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--bright);
+    border: 1px solid var(--bright);
+    padding: 4px 10px;
+    border-radius: 2px;
+  }
+
+  .hero-meta {
+    text-align: right;
+    display: flex;
+    flex-direction: row;
+    gap: 16px;
+    align-items: center;
+    align-self: center;
+  }
+
+  .hero-meta a {
+    display: flex;
+    align-items: center;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .hero-meta a:hover { color: var(--bright); transform: translateY(-2px); }
+  .hero-meta a svg { flex-shrink: 0; }
+
+  /* ── SECTIONS ── */
+  .section {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.3s; }
+  .section:nth-child(5) { animation-delay: 0.4s; }
+  .section:nth-child(6) { animation-delay: 0.5s; }
+  .section:nth-child(7) { animation-delay: 0.6s; }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--bright);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  /* ── SUMMARY ── */
+  .summary-text {
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.8;
+    columns: 2;
+    column-gap: 40px;
+  }
+
+  .summary-bullets {
+    list-style: none;
+    margin-top: 0;
+  }
+
+  .summary-bullets li {
+    font-size: 15px;
+    color: #1f2937;
+    padding: 5px 0 5px 16px;
+    position: relative;
+    line-height: 1.6;
+    break-inside: avoid;
+  }
+
+  .summary-bullets li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--bright);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── SKILLS TABLE ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .skill-row {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+    gap: 20px;
+    align-items: baseline;
+  }
+
+  .skill-row:last-child { border-bottom: none; }
+
+  .skill-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    color: var(--bright);
+    font-weight: 500;
+    padding-right: 12px;
+  }
+
+  .skill-value {
+    font-size: 14px;
+    color: #1f2937;
+    line-height: 1.5;
+  }
+
+  /* ── EXPERIENCE ── */
+  .job {
+    margin-bottom: 40px;
+  }
+
+  .job:last-child { margin-bottom: 0; }
+
+  .job-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    margin-bottom: 4px;
+  }
+
+  .job-company {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .job-company {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .job-dates {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-align: right;
+    padding-top: 4px;
+  }
+
+  .job-title {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--bright);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    font-family: 'DM Mono', monospace;
+    margin-bottom: 12px;
+  }
+
+  .job-location {
+    font-size: 13px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .job-context {
+    font-size: 13px;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 12px;
+    padding-left: 12px;
+    border-left: 2px solid var(--bright);
+  }
+
+  .job-bullets {
+    list-style: none;
+  }
+
+  .job-bullets li {
+    font-size: 14px;
+    color: #1f2937;
+    padding: 4px 0 4px 20px;
+    position: relative;
+    line-height: 1.65;
+  }
+
+  .job-bullets li::before {
+    content: '·';
+    position: absolute;
+    left: 6px;
+    color: var(--bright);
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .edu-item:last-child { border-bottom: none; }
+
+  .edu-degree {
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  .edu-school {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  .edu-status {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--bright);
+    letter-spacing: 0.08em;
+    text-align: right;
+  }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 40px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+
+  .footer-copy {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .print-btn {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    padding: 8px 16px;
+    cursor: pointer;
+    background: transparent;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+
+  .print-btn:hover {
+    background: var(--accent);
+    color: var(--paper);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    .side-rule, .print-btn { display: none; }
+    body::before { display: none; }
+    .page { padding: 0 40px; }
+    .hero, .section, .footer { opacity: 1; animation: none; }
+    .section { padding: 28px 0; }
+  }
+
+  /* ── MOBILE ── */
+  @media (max-width: 680px) {
+    .page { padding: 0 24px 0 48px; }
+    .side-rule { left: 16px; }
+    .hero { grid-template-columns: 1fr; }
+    .hero-meta { text-align: left; }
+    .summary-text { columns: 1; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .job-header { grid-template-columns: 1fr; }
+    .job-dates { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="side-rule"></div>
+
+<div class="page">
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="hero-photo">
+      <img src="https://raw.githubusercontent.com/pavanghai/images/master/Pavneet_headshot.png" alt="Pavneet Ghai" />
+    </div>
+    <div>
+      <h1 class="hero-name">Pavneet <em>Ghai</em></h1>
+      <div class="hero-titles">
+        <span class="tag">Python Developer</span>
+        <span class="tag">Software Engineer</span>
+        <span class="tag">Financial Analyst</span>
+      </div>
+    </div>
+    <div class="hero-meta">
+      <a href="/cdn-cgi/l/email-protection#cbbbaabdaaa5aca3aaa28bb2aaa3a4a4e5a8a4a6" title="pavanghai@yahoo.com">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/ghai/" target="_blank" title="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+      </a>
+      <a href="https://github.com/pavanghai" target="_blank" title="GitHub">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      </a>
+      <a href="https://linktr.ee/ghai" target="_blank" title="Contact Card">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+      </a>
+      <a href="https://www.google.com/maps/@33.2581573,-111.8282889,12.33z" target="_blank" title="Chandler, AZ">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- SUMMARY -->
+  <section class="section">
+    <div class="section-label">Profile</div>
+    <ul class="summary-bullets">
+      <li>9+ years of enterprise software experience across banking and insurance domains.</li>
+      <li>Strong background in Python-based backend engineering, data migration, and automation frameworks with deep exposure to financial data and risk/analytics tooling.</li>
+      <li>Currently pursuing MScFE at WorldQuant University — stochastic modeling, derivatives pricing, and ML.</li>
+      <li>Extensive experience building web applications and APIs using Python, Django, Flask, with relational and NoSQL databases.</li>
+      <li>Hands-on with Pandas, NumPy, SciPy, Matplotlib, Scikit-learn, Keras, SQLAlchemy, Selenium, PyUnit, Pytest.</li>
+      <li>Strong experience with SDLC, Agile/Scrum, CI/CD (Git, Jenkins), Autosys scheduling, and Shell automation in Linux/Unix.</li>
+      <li>Proficient in prompt engineering — leveraging AI tools for data validation, unit test generation, and ETL documentation.</li>
+      <li>Highly skilled in debugging complex applications; detail-oriented, analytical, and a strong team collaborator.</li>
+    </ul>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-label">Technical Skills</div>
+    <div class="skills-grid">
+      <div class="skill-row">
+        <span class="skill-label">Languages</span>
+        <span class="skill-value">Python, Perl, SQL, PL/SQL, Shell, Visual Basic, R, C, Java</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Python / Data / ML</span>
+        <span class="skill-value">Pandas, NumPy, SciPy, Matplotlib, Seaborn, Statsmodels, Scikit-learn, SQLAlchemy</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Frameworks</span>
+        <span class="skill-value">Flask, Django, CherryPy, web2py, Tornado, Pyramid, Robot</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Databases</span>
+        <span class="skill-value">Oracle, SQL Server, MySQL, PostgreSQL, Cassandra, MongoDB</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Web</span>
+        <span class="skill-value">HTML5, CSS3, XML, YAML, JavaScript, jQuery, AngularJS, Node.js</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Version Control</span>
+        <span class="skill-value">Git, GitHub, Bitbucket</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">DevOps / Tools</span>
+        <span class="skill-value">JIRA, UML, Maven, Ant, Autosys, Jenkins</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Methodologies</span>
+        <span class="skill-value">Agile, Scrum, Waterfall</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">Operating Systems</span>
+        <span class="skill-value">Windows, Linux/Unix, macOS</span>
+      </div>
+      <div class="skill-row">
+        <span class="skill-label">IDEs</span>
+        <span class="skill-value">VS Code, PyCharm, Eclipse</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section class="section">
+    <div class="section-label">Experience</div>
+
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <div class="job-company">Bank of America</div>
+          <div class="job-title">Software Engineer II (FTE) &nbsp;→&nbsp; Application Architect III (Contractor)</div>
+          <div class="job-location">Chandler, AZ &nbsp;·&nbsp; Team: Charlotte, NC</div>
+        </div>
+        <div class="job-dates">Aug 2020 — Present</div>
+      </div>
+      <p class="job-context" style="margin-top:12px;">Banking technology group focused on data migration, internal data hubs, and automation for critical applications.</p>
+      <ul class="job-bullets">
+        <li>Led development for a large-scale internal data hub and migration program, ensuring accurate, performant transfers of high-volume datasets across platforms and environments.</li>
+        <li>Converted complex legacy Perl utilities into modern, maintainable Python services, improving readability, performance, and observability of data pipelines.</li>
+        <li>Designed Python frameworks to execute Oracle-stored commands, run Hive/Impala transformations, perform statistical data validation, and trigger automated SLA-breach email alerts.</li>
+        <li>Leveraged Hadoop, Hive, and Sqoop with Avro and Parquet formats to move and transform large-volume data across layers.</li>
+        <li>Developed Shell scripts for operational jobs and maintained Autosys JIL jobs, calendars, and variables to orchestrate complex workflows.</li>
+        <li>Developed PL/SQL scripts, stored procedures, and database utilities to support migration, reconciliation, and validation across multiple environments.</li>
+        <li>Established Git repositories on Bitbucket, enforcing branching strategies and code reviews; managed user stories, defects, and sprint planning in JIRA within an Agile/Scrum team, providing production support for business-critical applications.</li>
+        <li>Applied prompt engineering with generative AI tools to auto-generate migration scripts, derive validation rules, draft unit tests, and produce technical documentation.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- EDUCATION -->
+  <section class="section">
+    <div class="section-label">Education</div>
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">MSc Financial Engineering (MScFE)</div>
+        <div class="edu-school">WorldQuant University</div>
+      </div>
+      <div class="edu-status">In Progress</div>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">Masters in Financial Management &amp; Project Management</div>
+        <div class="edu-school">University of Mumbai</div>
+      </div>
+      <div class="edu-status">Completed</div>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">Capital Market Trading</div>
+        <div class="edu-school">Online Trading Academy</div>
+      </div>
+      <div class="edu-status">Completed</div>
+    </div>
+    <div class="edu-item">
+      <div>
+        <div class="edu-degree">Advanced Diploma in Software Engineering</div>
+        <div class="edu-school">Aptech Computer Education</div>
+      </div>
+      <div class="edu-status">Completed</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer"
